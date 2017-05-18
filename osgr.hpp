@@ -152,10 +152,10 @@ inline bool OmniStereoGraphicsRenderer1::onCreate() {
   */
 
   // modify the primitive types and numbers as needed
-  // mShader.setGeometryInputPrimitive(Graphics::POINTS);
-  // mShader.setGeometryOutputPrimitive(Graphics::POINTS);
-  // mShader.setGeometryOutputVertices(30);
-  // mShader.attach(shaderG);
+  mShader.setGeometryInputPrimitive(Graphics::POINTS);
+  mShader.setGeometryOutputPrimitive(Graphics::POINTS);
+  mShader.setGeometryOutputVertices(30);
+  mShader.attach(shaderG);
 
   mShader.link(false).printLog();
 
@@ -304,7 +304,8 @@ void main(){
   float y = xy / (31.0);
   vec4 pos2 = vec4(x, y, z, 1.0);
 
-  gl_Position = omni_render(gl_ModelViewMatrix * pos2);
+  // gl_Position = omni_render(gl_ModelViewMatrix * pos2);
+  gl_Position = pos2;
 }
 )";
 }
@@ -312,13 +313,13 @@ void main(){
 inline std::string OmniStereoGraphicsRenderer1::fragmentCode() { return R"(
 #version 120
 
-// varying vec4 flux_g_to_f;
-varying vec4 flux_v_to_g;
+varying vec4 flux_g_to_f;
+// varying vec4 flux_v_to_g;
 
 
 void main(){
-  // gl_FragColor = flux_g_to_f;
-  gl_FragColor = flux_v_to_g;
+  gl_FragColor = flux_g_to_f;
+  // gl_FragColor = flux_v_to_g;
 }
 )";
 }
@@ -394,7 +395,7 @@ float rand(vec2 co){
 }
 
 void main(){
-  // flux_g_to_f = flux_v_to_g[0];
+  flux_g_to_f = flux_v_to_g[0];
 
   // for(int i = 0; i < gl_VerticesIn; ++i){
   //   //get flux value

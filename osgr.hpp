@@ -152,10 +152,10 @@ inline bool OmniStereoGraphicsRenderer1::onCreate() {
   */
 
   // modify the primitive types and numbers as needed
-  mShader.setGeometryInputPrimitive(Graphics::POINTS);
-  mShader.setGeometryOutputPrimitive(Graphics::POINTS);
-  mShader.setGeometryOutputVertices(30);
-  mShader.attach(shaderG);
+  // mShader.setGeometryInputPrimitive(Graphics::POINTS);
+  // mShader.setGeometryOutputPrimitive(Graphics::POINTS);
+  // mShader.setGeometryOutputVertices(30);
+  // mShader.attach(shaderG);
 
   mShader.link(false).printLog();
 
@@ -201,6 +201,62 @@ inline std::string OmniStereoGraphicsRenderer1::vertexCode() {
 #version 120
 #extension GL_EXT_gpu_shader4 : require
 
+uniform float omni_near;
+uniform float omni_far;
+uniform float omni_eye;
+uniform float omni_radius;
+uniform int omni_face;
+vec4 omni_render(in vec4 vertex) {
+  float l = length(vertex.xz);
+  vec3 vn = normalize(vertex.xyz);
+  // Precise formula.
+  float displacement = omni_eye *
+    (omni_radius * omni_radius -
+       sqrt(l * l * omni_radius * omni_radius +
+            omni_eye * omni_eye * (omni_radius * omni_radius - l * l))) /
+    (omni_radius * omni_radius - omni_eye * omni_eye);
+  // Approximation, safe if omni_radius / omni_eye is very large, which is true for the allosphere.
+  // float displacement = omni_eye * (1.0 - l / omni_radius);
+  // Displace vertex.
+  vertex.xz += vec2(displacement * vn.z, displacement * -vn.x);
+
+  // convert eye-space into cubemap-space:
+  // GL_TEXTURE_CUBE_MAP_POSITIVE_X
+  if (omni_face == 0) {
+    vertex.xyz = vec3(-vertex.z, -vertex.y, -vertex.x);
+  }
+  // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
+  else if (omni_face == 1) {
+    vertex.xyz = vec3(vertex.z, -vertex.y, vertex.x);
+  }
+  // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
+  else if (omni_face == 2) {
+    vertex.xyz = vec3(vertex.x, vertex.z, -vertex.y);
+  }
+  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
+  else if (omni_face == 3) {
+    vertex.xyz = vec3(vertex.x, -vertex.z, vertex.y);
+  }
+  // GL_TEXTURE_CUBE_MAP_POSITIVE_Z
+  else if (omni_face == 4) {
+    vertex.xyz = vec3(vertex.x, -vertex.y, -vertex.z);
+  }
+  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
+  else {
+    vertex.xyz = vec3(-vertex.x, -vertex.y, vertex.z);
+  }
+
+  // convert into screen-space:
+  // simplified perspective projection since fovy = 90 and aspect = 1
+  vertex.zw = vec2(
+    (vertex.z * (omni_far + omni_near) + vertex.w * omni_far * omni_near * 2.) / (omni_near - omni_far),
+    -vertex.z
+  );
+
+  return vertex;
+}
+
+
 // uniform sampler3D texSampler2;
 uniform sampler2D texSampler2;
 
@@ -239,7 +295,8 @@ void main(){
   gl_TexCoord[0] = gl_MultiTexCoord0;
 
   // pass position to geometry shader
-  gl_Position = pos;
+  // gl_Position = pos;
+  gl_Position = omni_render(gl_ModelViewMatrix * pos);
 }
 )";
 }
@@ -247,10 +304,13 @@ void main(){
 inline std::string OmniStereoGraphicsRenderer1::fragmentCode() { return R"(
 #version 120
 
-varying vec4 flux_g_to_f;
+// varying vec4 flux_g_to_f;
+varying vec4 flux_v_to_g;
+
 
 void main(){
-  gl_FragColor = flux_g_to_f;
+  // gl_FragColor = flux_g_to_f;
+  gl_FragColor = flux_v_to_g;
 }
 )";
 }

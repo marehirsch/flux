@@ -194,12 +194,12 @@ struct AlloApp : App, InterfaceServerClient {
       uniform float animTime;
 			varying vec4 flux_v_to_g;
       varying vec4 pos_v_to_g;
-      varying float id_geo;
+      // varying float id_geo;
       float TEX_WIDTH = 178.0;
 
       void main(){
         float id = float(gl_VertexID);
-        id_geo = id;
+        // id_geo = id;
         vec3 coord = vec3(mod(id, TEX_WIDTH), floor(id/TEX_WIDTH), 0.);
         coord /= vec3(TEX_WIDTH);
 
@@ -251,11 +251,9 @@ struct AlloApp : App, InterfaceServerClient {
       uniform float animTime;
       varying in vec4 flux_v_to_g[];
       varying out vec4 flux_g_to_f;
-      varying in float id_geo[];
-      vec2 test;
-      float test2;
-      vec2 randCoord;
-      float randx, randy, randz;
+      // varying in float id_geo[];
+      // vec2 randCoord;
+      // float randx, randy, randz;
       float rand(vec2 co){
         return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
       }
@@ -263,34 +261,39 @@ struct AlloApp : App, InterfaceServerClient {
       void main(){
         flux_g_to_f = flux_v_to_g[0];
 
-        for(int i = 0; i < gl_VerticesIn; ++i){
-          //get flux value
-          float gflux = flux_v_to_g[i].x;
+        // for(int i = 0; i < gl_VerticesIn; ++i){
+        //   //get flux value
+        //   float gflux = flux_v_to_g[i].x;
 
-          for(int j=0; j<gflux*10; j++){
-            //add displacement to each vertex (more vertices for higher gflux value)
-            randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
-            randx = rand(randCoord + vec2(.01, .02))/50.;
-            randy = rand(randCoord + vec2(.02, .03))/50.;
-            randz = rand(randCoord + vec2(.03, .04))/50.;
-            vec3 yayRandom = vec3(randx,randy,randz);
-            // yayRandom = (yayRandom * vec3(2.))-vec3(1.);
-            // yayRandom * .01;
+        //   for(int j=0; j<gflux*10; j++){
+        //     //add displacement to each vertex (more vertices for higher gflux value)
+        //     randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
+        //     randx = rand(randCoord + vec2(.01, .02))/50.;
+        //     randy = rand(randCoord + vec2(.02, .03))/50.;
+        //     randz = rand(randCoord + vec2(.03, .04))/50.;
+        //     vec3 yayRandom = vec3(randx,randy,randz);
+        //     // yayRandom = (yayRandom * vec3(2.))-vec3(1.);
+        //     // yayRandom * .01;
 
-            vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
-            //vec4 posGeo = vec4(gl_PositionIn[0].xyz, 1.);
-            //posGeo.xyz += yayRandom;
+        //     vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
+        //     //vec4 posGeo = vec4(gl_PositionIn[0].xyz, 1.);
+        //     //posGeo.xyz += yayRandom;
 
 
-            // if(posGeo.x > gl_PositionIn[i].x + gCoords[j].x + 0.05 || posGeo.x < gl_PositionIn[i].x + gCoords[j].x - 0.05 ||
-            //    posGeo.y > gl_PositionIn[i].y + gCoords[j].y + 0.05 || posGeo.y < gl_PositionIn[i].y + gCoords[j].y - 0.05 ||
-            //    posGeo.z > gl_PositionIn[i].z + gCoords[j].z + 0.05 || posGeo.z < gl_PositionIn[i].z + gCoords[j].z - 0.05 ){
-            //    posGeo = vec4(gl_PositionIn[i].xyz + gCoords[j], 1.);
-            //    }
-            gl_Position = gl_ModelViewProjectionMatrix * posGeo;
-            EmitVertex();
-          }
-        }
+        //     // if(posGeo.x > gl_PositionIn[i].x + gCoords[j].x + 0.05 || posGeo.x < gl_PositionIn[i].x + gCoords[j].x - 0.05 ||
+        //     //    posGeo.y > gl_PositionIn[i].y + gCoords[j].y + 0.05 || posGeo.y < gl_PositionIn[i].y + gCoords[j].y - 0.05 ||
+        //     //    posGeo.z > gl_PositionIn[i].z + gCoords[j].z + 0.05 || posGeo.z < gl_PositionIn[i].z + gCoords[j].z - 0.05 ){
+        //     //    posGeo = vec4(gl_PositionIn[i].xyz + gCoords[j], 1.);
+        //     //    }
+        //     gl_Position = gl_ModelViewProjectionMatrix * posGeo;
+        //     EmitVertex();
+        //   }
+        // }
+
+        vec4 posGeo = vec4(gl_PositionIn[0].xyz, 1.);
+        gl_Position = gl_ModelViewProjectionMatrix * posGeo;
+        EmitVertex();
+
         EndPrimitive();
       }
     )"

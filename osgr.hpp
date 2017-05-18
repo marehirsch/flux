@@ -226,7 +226,7 @@ void main(){
 
   vec4 pos = vec4(data.xy, 0., 1.);
 
-  float earthRad = 10.0;
+  float earthRad = 1.0;
   float xConv = (data.x)*(3.14/180.);
   float yConv = (data.y)*(3.14/180.);
   pos.x = -earthRad * cos(xConv) * cos(yConv);

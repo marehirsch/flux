@@ -155,7 +155,7 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
       // Create 3d texture and load it with data
       glGenTextures(1, &tex3d1);
 
-      /*
+      
       glBindTexture(GL_TEXTURE_3D, tex3d1);
       // Set texture wrapping to GL_REPEAT
       glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -166,20 +166,18 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
       // Load 3d texture with data
       glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, TEX_WIDTH, TEX_WIDTH, 12, 0, GL_RGBA, GL_FLOAT, texArray.data());
       glBindTexture(GL_TEXTURE_3D, 0);
-*/
-
-      glBindTexture(GL_TEXTURE_2D, tex3d1);
-      // Set texture wrapping to GL_REPEAT
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-      // Set texture filtering
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      // Load 3d texture with data
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEX_WIDTH, TEX_WIDTH, 0, GL_RGBA, GL_FLOAT, texArray.data());
 
 
-      glBindTexture(GL_TEXTURE_2D, 0);
+      // glBindTexture(GL_TEXTURE_2D, tex3d1);
+      // // Set texture wrapping to GL_REPEAT
+      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      // // Set texture filtering
+      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      // // Load 3d texture with data
+      // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEX_WIDTH, TEX_WIDTH, 0, GL_RGBA, GL_FLOAT, texArray.data());
+      // glBindTexture(GL_TEXTURE_2D, 0);
 
       cout << "Created 3d texture!" << endl;
     }
@@ -198,10 +196,10 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     omni().clearColor() = Color(0.0f, omni().face() / 5.0f, (5.0f - omni().face()) / 5.0f);
 
     glActiveTexture(GL_TEXTURE0);
-    // glEnable(GL_TEXTURE_3D);
-    glEnable(GL_TEXTURE_2D);
-    // glBindTexture(GL_TEXTURE_3D, tex3d1);
-    glBindTexture(GL_TEXTURE_2D, tex3d1);
+    glEnable(GL_TEXTURE_3D);
+    // glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_3D, tex3d1);
+    // glBindTexture(GL_TEXTURE_2D, tex3d1);
 
     shader().uniform("animTime", animTime);
     shader().uniform("texSampler2", 0);
@@ -211,8 +209,8 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     g.pointSize(20);
     g.draw(dataMesh);
 
-    // glDisable(GL_TEXTURE_3D);
-    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_3D);
+    // glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_3D, 0);
   }
 };

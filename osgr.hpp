@@ -257,8 +257,8 @@ vec4 omni_render(in vec4 vertex) {
 }
 
 
-// uniform sampler3D texSampler2;
-uniform sampler2D texSampler2;
+uniform sampler3D texSampler2;
+// uniform sampler2D texSampler2;
 
 uniform float animTime;
 varying vec4 flux_v_to_g;
@@ -278,8 +278,8 @@ void main(){
   coord.z = animTime;
   // coord.z = 0.;
 
-  // vec4 data = texture3D(texSampler2, coord);
-  vec4 data = texture2D(texSampler2, coord.xy);
+  vec4 data = texture3D(texSampler2, coord);
+  // vec4 data = texture2D(texSampler2, coord.xy);
 
   vec4 pos = vec4(data.xy, 0., 1.);
 

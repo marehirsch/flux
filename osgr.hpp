@@ -226,27 +226,20 @@ void main(){
 
   vec4 pos = vec4(data.xy, 0., 1.);
 
-  float theta = mod(id, TEX_WIDTH);
-  float phi = id / TEX_WIDTH;
-
-  theta  = (theta / TEX_WIDTH) * 2.0 * 3.14159265358979;
-  phi  = (phi / TEX_WIDTH) * 3.14159265358979;
-
   float earthRad = 1.0;
-  float xConv = (data.x)*(3.14/180.);
-  float yConv = (data.y)*(3.14/180.);
-  pos.x = -earthRad * cos(xConv) * cos(yConv);
-  pos.y = earthRad * sin(xConv);
-  pos.z = earthRad * cos(xConv) * sin(yConv);
+  float xConv = (data.x)*(3.14159265358979/180.);
+  float yConv = (data.y)*(3.14159265358979/180.);
 
+  // pos.x = -earthRad * cos(xConv) * cos(yConv);
+  // pos.y = earthRad * sin(xConv);
+  // pos.z = earthRad * cos(xConv) * sin(yConv);
 
-  pos.x = -earthRad * cos(phi) * cos(theta);
-  pos.y = earthRad * sin(phi);
-  pos.z = earthRad * cos(phi) * sin(theta);
+  pos.x = (data.x + 90.0) / 180.0;
+  pos.y = (data.y + 180.0) / 360.0;  
 
   flux_v_to_g = vec4(data.z,0.2,0.2,1.);
-  
-  my_color = 0.5 * (pos + 1.0);
+
+  my_color = pos;
   // Built-in varying that we will use in the fragment shader
   gl_TexCoord[0] = gl_MultiTexCoord0;
 
@@ -274,7 +267,7 @@ varying vec4 my_color2;
 
 void main(){
   // gl_FragColor = flux_g_to_f;
-  gl_FragColor = mix(flux_g_to_f, my_color2, 0.8);
+  gl_FragColor = mix(flux_g_to_f, my_color2, 0.999);
 }
 )";
 }

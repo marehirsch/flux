@@ -335,8 +335,8 @@ varying in float id_geo[];
 varying in vec4 my_color[];
 varying out vec4 my_color2;
 
-vec2 randCoord;
-float randx, randy, randz;
+// vec2 randCoord;
+// float randx, randy, randz;
 float rand(vec2 co){
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
@@ -355,10 +355,10 @@ void main(){
     for(int j=0; j<gflux*10; j++){
       //add displacement to each vertex (more vertices for higher gflux value)
 
-      randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
-      randx = rand(randCoord + vec2(.01, .02)); // /50.;
-      randy = rand(randCoord + vec2(.02, .03)); // /50.;
-      randz = rand(randCoord + vec2(.03, .04)); // /50.;
+      vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
+      float randx = rand(randCoord + vec2(.01, .02)); // /50.;
+      float randy = rand(randCoord + vec2(.02, .03)); // /50.;
+      float randz = rand(randCoord + vec2(.03, .04)); // /50.;
       vec3 yayRandom = vec3(randx,randy,randz);
 
       vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);

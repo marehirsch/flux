@@ -100,7 +100,7 @@ inline void OmniStereoGraphicsRenderer1::start() {
 inline OmniStereoGraphicsRenderer1::~OmniStereoGraphicsRenderer1() {}
 
 inline OmniStereoGraphicsRenderer1::OmniStereoGraphicsRenderer1()
-    : mNavControl(mNav), mOSCSend(12001), mOmni(1024, true) {
+    : mNavControl(mNav), mOSCSend(12001), mOmni(2048, true) {
 
   bOmniEnable = true;
   mHostName = Socket::hostName();
@@ -204,12 +204,12 @@ inline std::string OmniStereoGraphicsRenderer1::vertexCode() {
 uniform sampler3D texSampler2;
 uniform float animTime;
 varying vec4 flux_v_to_g;
-varying float id_geo;
+// varying float id_geo;
 float TEX_WIDTH = 178.0;
 
 void main(){
   float id = float(gl_VertexID);
-  id_geo = id;
+  // id_geo = id;
   vec3 coord = vec3(mod(id, TEX_WIDTH), floor(id/TEX_WIDTH), 0.);
   coord /= vec3(TEX_WIDTH);
 
@@ -314,35 +314,41 @@ vec4 omni_render(in vec4 vertex) {
 uniform float animTime;
 varying in vec4 flux_v_to_g[];
 varying out vec4 flux_g_to_f;
-varying in float id_geo[];
+// varying in float id_geo[];
 
-vec2 randCoord;
-float randx, randy, randz;
+// vec2 randCoord;
+// float randx, randy, randz;
 float rand(vec2 co){
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
 void main(){
+  // flux_g_to_f = flux_v_to_g[0];
+
+  // for(int i = 0; i < gl_VerticesIn; ++i){
+  //   //get flux value
+  //   float gflux = flux_v_to_g[i].x;
+
+  //   for(int j=0; j<gflux*10; j++){
+  //     //add displacement to each vertex (more vertices for higher gflux value)
+
+  //     randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
+  //     randx = rand(randCoord + vec2(.01, .02))/50.;
+  //     randy = rand(randCoord + vec2(.02, .03))/50.;
+  //     randz = rand(randCoord + vec2(.03, .04))/50.;
+  //     vec3 yayRandom = vec3(randx,randy,randz);
+
+  //     vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
+  //     gl_Position = omni_render(gl_ModelViewMatrix * posGeo);
+  //     EmitVertex();
+  //   }
+  // }
+
   flux_g_to_f = flux_v_to_g[0];
+  vec4 posGeo = vec4(gl_PositionIn[0].xyz, 1.0);
+  gl_Position = omni_render(gl_ModelViewMatrix * posGeo);
+  EmitVertex();
 
-  for(int i = 0; i < gl_VerticesIn; ++i){
-    //get flux value
-    float gflux = flux_v_to_g[i].x;
-
-    for(int j=0; j<gflux*10; j++){
-      //add displacement to each vertex (more vertices for higher gflux value)
-
-      randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
-      randx = rand(randCoord + vec2(.01, .02))/50.;
-      randy = rand(randCoord + vec2(.02, .03))/50.;
-      randz = rand(randCoord + vec2(.03, .04))/50.;
-      vec3 yayRandom = vec3(randx,randy,randz);
-
-      vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
-      gl_Position = omni_render(gl_ModelViewMatrix * posGeo);
-      EmitVertex();
-    }
-  }
   EndPrimitive();
 }
 )";

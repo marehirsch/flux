@@ -231,7 +231,7 @@ void main(){
   float yConv = (data.y - 0.5) * 2.0 * 3.14159265358979;
   float zConv = data.z * 20.0;
 
-  pos.x = -earthRad * cos(xConv) * cos(yConv);
+  pos.x = earthRad * cos(xConv) * cos(yConv);
   pos.y = earthRad * sin(xConv);
   pos.z = earthRad * cos(xConv) * sin(yConv);
 

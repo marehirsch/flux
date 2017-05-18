@@ -125,6 +125,7 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
             float srcColumn(data[row][column]);
             srcColumn = std::min(std::max(0.0f, srcColumn), 20.0f) / 20.0f;
             texArray.push_back(srcColumn);
+
             // Add alpha channel
             texArray.push_back(1.0);
 

@@ -111,12 +111,19 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     int filler_points = (TEX_WIDTH*TEX_WIDTH) - NUM_POINTS;
 
     //populate texArray with lat, long, flux values
+    float r = 0;
     for(int column=2; column < 14; column++){
           for (int row = 0; row < NUM_POINTS; row++) {
             float src0(data[row][0]);
-            texArray.push_back(src0);
+            // texArray.push_back(src0);
+            texArray.push_back(r);
+
+            r += 1;
+            if (r > 90) r = 0;
+
             float src1(data[row][1]);
-            texArray.push_back(src1);
+            // texArray.push_back(src1);
+            texArray.push_back(0);
             float srcColumn(data[row][column]);
             texArray.push_back(srcColumn);
             // Add alpha channel

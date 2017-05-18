@@ -234,8 +234,11 @@ void main(){
   // pos.y = earthRad * sin(xConv);
   // pos.z = earthRad * cos(xConv) * sin(yConv);
 
-  pos.x = (data.x + 90.0) / 180.0;
-  pos.y = (data.y + 180.0) / 360.0;  
+  // pos.x = (data.x + 90.0) / 180.0;
+  pos.x = data.x / 90.0;
+  // pos.y = (data.y + 180.0) / 360.0;  
+  pos.y = 0.0;  
+  // pos.z = data.z;
 
   flux_v_to_g = vec4(data.z,0.2,0.2,1.);
 

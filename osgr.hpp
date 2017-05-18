@@ -227,22 +227,21 @@ void main(){
   vec4 pos = vec4(data.xy, 0., 1.);
 
   float earthRad = 1.0;
-  float xConv = (data.x)*(3.14159265358979/180.);
-  float yConv = (data.y)*(3.14159265358979/180.);
+  float xConv = data.x * 3.14159265358979;
+  float yConv = data.y * 2.0 * 3.14159265358979;
+  float zConv = data.z * 20.0;
 
-  // pos.x = -earthRad * cos(xConv) * cos(yConv);
-  // pos.y = earthRad * sin(xConv);
-  // pos.z = earthRad * cos(xConv) * sin(yConv);
+  pos.x = -earthRad * cos(xConv) * cos(yConv);
+  pos.y = earthRad * sin(xConv);
+  pos.z = earthRad * cos(xConv) * sin(yConv);
 
-  // pos.x = (data.x + 90.0) / 180.0;
-  pos.x = data.x / 90.0;
-  // pos.y = (data.y + 180.0) / 360.0;  
-  pos.y = 0.0;  
-  // pos.z = data.z;
-
-  flux_v_to_g = vec4(data.z,0.2,0.2,1.);
-
+  pos.x = data.x;
+  pos.y = data.y;  
+  pos.z = data.z;
   my_color = pos;
+
+  flux_v_to_g = vec4(zConv, 0.2, 0.2, 1.0);
+
   // Built-in varying that we will use in the fragment shader
   gl_TexCoord[0] = gl_MultiTexCoord0;
 

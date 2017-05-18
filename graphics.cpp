@@ -14,6 +14,7 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 
 using namespace al;
@@ -115,16 +116,13 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     for(int column=2; column < 14; column++){
           for (int row = 0; row < NUM_POINTS; row++) {
             float src0(data[row][0]);
-            // texArray.push_back(src0);
-            texArray.push_back(r);
-
-            r += 1;
-            if (r > 90) r = 0;
-
+            src0 = (90.0f + src0) / 180.0f;
+            texArray.push_back(src0); // normalize before sending
             float src1(data[row][1]);
-            // texArray.push_back(src1);
-            texArray.push_back(0);
+            src1 = (180.0f + src1) / 360.0f;
+            texArray.push_back(src1);
             float srcColumn(data[row][column]);
+            srcColumn = std::min(std::max(0.0f, srcColumn), 20.0f) / 20.0f;
             texArray.push_back(srcColumn);
             // Add alpha channel
             texArray.push_back(1.0);

@@ -226,13 +226,26 @@ void main(){
 
   vec4 pos = vec4(data.xy, 0., 1.);
 
+  float theta = mod(id, TEX_WIDTH);
+  float phi = id / TEX_WIDTH;
+
+  theta  = (theta / TEX_WIDTH) * 2.0 * 3.14159265358979;
+  phi  = (phi / TEX_WIDTH) * 3.14159265358979;
+
   float earthRad = 1.0;
   float xConv = (data.x)*(3.14/180.);
   float yConv = (data.y)*(3.14/180.);
   pos.x = -earthRad * cos(xConv) * cos(yConv);
   pos.y = earthRad * sin(xConv);
   pos.z = earthRad * cos(xConv) * sin(yConv);
+
+
+  pos.x = -earthRad * cos(phi) * cos(theta);
+  pos.y = earthRad * sin(phi);
+  pos.z = earthRad * cos(phi) * sin(theta);
+
   flux_v_to_g = vec4(data.z,0.2,0.2,1.);
+  
   my_color = 0.5 * (pos + 1.0);
   // Built-in varying that we will use in the fragment shader
   gl_TexCoord[0] = gl_MultiTexCoord0;
@@ -335,8 +348,6 @@ varying in float id_geo[];
 varying in vec4 my_color[];
 varying out vec4 my_color2;
 
-// vec2 randCoord;
-// float randx, randy, randz;
 float rand(vec2 co){
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }

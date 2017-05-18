@@ -112,15 +112,16 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     int filler_points = (TEX_WIDTH*TEX_WIDTH) - NUM_POINTS;
 
     //populate texArray with lat, long, flux values
-    float r = 0;
     for(int column=2; column < 14; column++){
           for (int row = 0; row < NUM_POINTS; row++) {
             float src0(data[row][0]);
             src0 = (90.0f + src0) / 180.0f;
             texArray.push_back(src0); // normalize before sending
+
             float src1(data[row][1]);
             src1 = (180.0f + src1) / 360.0f;
             texArray.push_back(src1);
+
             float srcColumn(data[row][column]);
             srcColumn = std::min(std::max(0.0f, srcColumn), 20.0f) / 20.0f;
             texArray.push_back(srcColumn);
@@ -171,18 +172,6 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
       // Load 3d texture with data
       glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, TEX_WIDTH, TEX_WIDTH, 12, 0, GL_RGBA, GL_FLOAT, texArray.data());
       glBindTexture(GL_TEXTURE_3D, 0);
-
-
-      // glBindTexture(GL_TEXTURE_2D, tex3d1);
-      // // Set texture wrapping to GL_REPEAT
-      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-      // // Set texture filtering
-      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      // // Load 3d texture with data
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEX_WIDTH, TEX_WIDTH, 0, GL_RGBA, GL_FLOAT, texArray.data());
-      // glBindTexture(GL_TEXTURE_2D, 0);
 
       cout << "Created 3d texture!" << endl;
     }

@@ -205,7 +205,7 @@ uniform sampler3D texSampler2;
 
 uniform float animTime;
 varying vec4 flux_v_to_g;
-varying vec4 my_color;
+// varying vec4 my_color;
 varying float id_geo;
 float TEX_WIDTH = 178.0;
 
@@ -227,18 +227,13 @@ void main(){
   vec4 pos = vec4(data.xy, 0., 1.);
 
   float earthRad = 1.0;
-  float xConv = data.x * 3.14159265358979;
-  float yConv = data.y * 2.0 * 3.14159265358979;
+  float xConv = (data.x - 0.5) * 3.14159265358979;
+  float yConv = (data.y - 0.5) * 2.0 * 3.14159265358979;
   float zConv = data.z * 20.0;
 
   pos.x = -earthRad * cos(xConv) * cos(yConv);
   pos.y = earthRad * sin(xConv);
   pos.z = earthRad * cos(xConv) * sin(yConv);
-
-  pos.x = data.x;
-  pos.y = data.y;  
-  pos.z = data.z;
-  my_color = pos;
 
   flux_v_to_g = vec4(zConv, 0.2, 0.2, 1.0);
 
@@ -246,17 +241,7 @@ void main(){
   gl_TexCoord[0] = gl_MultiTexCoord0;
 
   // pass position to geometry shader
-  // gl_Position = pos;
-  // gl_Position = omni_render(gl_ModelViewMatrix * pos);
-
-  float xy = mod(id, 31.0 * 31.0);
-  float z = id / (31.0 * 31.0);
-  float x = mod(xy, 31.0);
-  float y = xy / (31.0);
-  vec4 pos2 = vec4(x, y, z, 1.0);
-
-  // gl_Position = omni_render(gl_ModelViewMatrix * pos2);
-  gl_Position = pos2;
+  gl_Position = pos;
 }
 )";
 }
@@ -265,11 +250,9 @@ inline std::string OmniStereoGraphicsRenderer1::fragmentCode() { return R"(
 #version 120
 
 varying vec4 flux_g_to_f;
-varying vec4 my_color2;
 
 void main(){
-  // gl_FragColor = flux_g_to_f;
-  gl_FragColor = mix(flux_g_to_f, my_color2, 0.999);
+  gl_FragColor = flux_g_to_f;
 }
 )";
 }
@@ -340,9 +323,6 @@ varying out vec4 flux_g_to_f;
 varying in float id_geo[];
 
 
-varying in vec4 my_color[];
-varying out vec4 my_color2;
-
 float rand(vec2 co){
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
@@ -352,9 +332,6 @@ void main(){
   
 
   for(int i = 0; i < gl_VerticesIn; ++i){
-
-    my_color2 = my_color[i];
-
     //get flux value
     float gflux = flux_v_to_g[i].x;
 
@@ -362,9 +339,9 @@ void main(){
       //add displacement to each vertex (more vertices for higher gflux value)
 
       vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
-      float randx = rand(randCoord + vec2(.01, .02)); // /50.;
-      float randy = rand(randCoord + vec2(.02, .03)); // /50.;
-      float randz = rand(randCoord + vec2(.03, .04)); // /50.;
+      float randx = rand(randCoord + vec2(.01, .02)) / 50.;
+      float randy = rand(randCoord + vec2(.02, .03)) / 50.;
+      float randz = rand(randCoord + vec2(.03, .04)) / 50.;
       vec3 yayRandom = vec3(randx,randy,randz);
 
       vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);

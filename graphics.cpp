@@ -197,9 +197,7 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
 
     glActiveTexture(GL_TEXTURE0);
     glEnable(GL_TEXTURE_3D);
-    // glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_3D, tex3d1);
-    // glBindTexture(GL_TEXTURE_2D, tex3d1);
 
     shader().uniform("animTime", animTime);
     shader().uniform("texSampler2", 0);
@@ -210,7 +208,6 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     g.draw(dataMesh);
 
     glDisable(GL_TEXTURE_3D);
-    // glDisable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_3D, 0);
   }
 };

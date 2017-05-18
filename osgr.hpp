@@ -201,67 +201,11 @@ inline std::string OmniStereoGraphicsRenderer1::vertexCode() {
 #version 120
 #extension GL_EXT_gpu_shader4 : require
 
-uniform float omni_near;
-uniform float omni_far;
-uniform float omni_eye;
-uniform float omni_radius;
-uniform int omni_face;
-vec4 omni_render(in vec4 vertex) {
-  float l = length(vertex.xz);
-  vec3 vn = normalize(vertex.xyz);
-  // Precise formula.
-  float displacement = omni_eye *
-    (omni_radius * omni_radius -
-       sqrt(l * l * omni_radius * omni_radius +
-            omni_eye * omni_eye * (omni_radius * omni_radius - l * l))) /
-    (omni_radius * omni_radius - omni_eye * omni_eye);
-  // Approximation, safe if omni_radius / omni_eye is very large, which is true for the allosphere.
-  // float displacement = omni_eye * (1.0 - l / omni_radius);
-  // Displace vertex.
-  vertex.xz += vec2(displacement * vn.z, displacement * -vn.x);
-
-  // convert eye-space into cubemap-space:
-  // GL_TEXTURE_CUBE_MAP_POSITIVE_X
-  if (omni_face == 0) {
-    vertex.xyz = vec3(-vertex.z, -vertex.y, -vertex.x);
-  }
-  // GL_TEXTURE_CUBE_MAP_NEGATIVE_X
-  else if (omni_face == 1) {
-    vertex.xyz = vec3(vertex.z, -vertex.y, vertex.x);
-  }
-  // GL_TEXTURE_CUBE_MAP_POSITIVE_Y
-  else if (omni_face == 2) {
-    vertex.xyz = vec3(vertex.x, vertex.z, -vertex.y);
-  }
-  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Y
-  else if (omni_face == 3) {
-    vertex.xyz = vec3(vertex.x, -vertex.z, vertex.y);
-  }
-  // GL_TEXTURE_CUBE_MAP_POSITIVE_Z
-  else if (omni_face == 4) {
-    vertex.xyz = vec3(vertex.x, -vertex.y, -vertex.z);
-  }
-  // GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
-  else {
-    vertex.xyz = vec3(-vertex.x, -vertex.y, vertex.z);
-  }
-
-  // convert into screen-space:
-  // simplified perspective projection since fovy = 90 and aspect = 1
-  vertex.zw = vec2(
-    (vertex.z * (omni_far + omni_near) + vertex.w * omni_far * omni_near * 2.) / (omni_near - omni_far),
-    -vertex.z
-  );
-
-  return vertex;
-}
-
-
 uniform sampler3D texSampler2;
-// uniform sampler2D texSampler2;
 
 uniform float animTime;
 varying vec4 flux_v_to_g;
+varying vec4 my_color;
 varying float id_geo;
 float TEX_WIDTH = 178.0;
 
@@ -279,7 +223,6 @@ void main(){
   // coord.z = 0.;
 
   vec4 data = texture3D(texSampler2, coord);
-  // vec4 data = texture2D(texSampler2, coord.xy);
 
   vec4 pos = vec4(data.xy, 0., 1.);
 
@@ -290,7 +233,7 @@ void main(){
   pos.y = earthRad * sin(xConv);
   pos.z = earthRad * cos(xConv) * sin(yConv);
   flux_v_to_g = vec4(data.z,0.2,0.2,1.);
-
+  my_color = 0.5 * (pos + 1.0);
   // Built-in varying that we will use in the fragment shader
   gl_TexCoord[0] = gl_MultiTexCoord0;
 
@@ -314,12 +257,11 @@ inline std::string OmniStereoGraphicsRenderer1::fragmentCode() { return R"(
 #version 120
 
 varying vec4 flux_g_to_f;
-// varying vec4 flux_v_to_g;
-
+varying vec4 my_color2;
 
 void main(){
-  gl_FragColor = flux_g_to_f;
-  // gl_FragColor = flux_v_to_g;
+  // gl_FragColor = flux_g_to_f;
+  gl_FragColor = mix(flux_g_to_f, my_color2, 0.8);
 }
 )";
 }
@@ -386,7 +328,12 @@ vec4 omni_render(in vec4 vertex) {
 uniform float animTime;
 varying in vec4 flux_v_to_g[];
 varying out vec4 flux_g_to_f;
+
 varying in float id_geo[];
+
+
+varying in vec4 my_color[];
+varying out vec4 my_color2;
 
 vec2 randCoord;
 float randx, randy, randz;
@@ -396,8 +343,12 @@ float rand(vec2 co){
 
 void main(){
   flux_g_to_f = flux_v_to_g[0];
+  
 
   for(int i = 0; i < gl_VerticesIn; ++i){
+
+    my_color2 = my_color[i];
+
     //get flux value
     float gflux = flux_v_to_g[i].x;
 
@@ -415,11 +366,6 @@ void main(){
       EmitVertex();
     }
   }
-
-  // flux_g_to_f = flux_v_to_g[0];
-  // vec4 posGeo = vec4(gl_PositionIn[0].xyz, 1.0);
-  // gl_Position = omni_render(gl_ModelViewMatrix * posGeo);
-  // EmitVertex();
 
   EndPrimitive();
 }

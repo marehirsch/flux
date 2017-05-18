@@ -201,7 +201,9 @@ inline std::string OmniStereoGraphicsRenderer1::vertexCode() {
 #version 120
 #extension GL_EXT_gpu_shader4 : require
 
-uniform sampler3D texSampler2;
+// uniform sampler3D texSampler2;
+uniform sampler2D texSampler2;
+
 uniform float animTime;
 varying vec4 flux_v_to_g;
 // varying float id_geo;
@@ -220,7 +222,8 @@ void main(){
   coord.z = animTime;
   // coord.z = 0.;
 
-  vec4 data = texture3D(texSampler2, coord);
+  // vec4 data = texture3D(texSampler2, coord);
+  vec4 data = texture2D(texSampler2, coord.xy);
 
   vec4 pos = vec4(data.xy, 0., 1.);
 

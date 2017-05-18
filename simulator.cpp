@@ -304,7 +304,7 @@ struct AlloApp : App, InterfaceServerClient {
 			g.clearColor(0.1,0.1,0.1,1);
 			g.clear(Graphics::COLOR_BUFFER_BIT);
 			// g.rotate(time*5, 0,1,0);
-
+      g.pointSize(10);
       shader.begin();
 
 				glActiveTexture(GL_TEXTURE0);

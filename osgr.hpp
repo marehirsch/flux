@@ -296,7 +296,8 @@ void main(){
 
   // pass position to geometry shader
   // gl_Position = pos;
-  gl_Position = omni_render(gl_ModelViewMatrix * pos);
+  // gl_Position = omni_render(gl_ModelViewMatrix * pos);
+  gl_Position = gl_ModelViewProjectionMatrix * pos;
 }
 )";
 }

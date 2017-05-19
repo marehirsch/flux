@@ -100,7 +100,7 @@ inline void OmniStereoGraphicsRenderer1::start() {
 inline OmniStereoGraphicsRenderer1::~OmniStereoGraphicsRenderer1() {}
 
 inline OmniStereoGraphicsRenderer1::OmniStereoGraphicsRenderer1()
-    : mNavControl(mNav), mOSCSend(12001), mOmni(2048, true) {
+    : mNavControl(mNav), mOSCSend(12001), mOmni(1024, true) {
 
   bOmniEnable = true;
   mHostName = Socket::hostName();
@@ -342,9 +342,9 @@ void main(){
       //add displacement to each vertex (more vertices for higher gflux value)
 
       vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
-      float randx = rand(randCoord + vec2(.01, .02)) / 50.;
-      float randy = rand(randCoord + vec2(.02, .03)) / 50.;
-      float randz = rand(randCoord + vec2(.03, .04)) / 50.;
+      float randx = rand(randCoord + vec2(.01, .02)) / 30.;
+      float randy = rand(randCoord + vec2(.02, .03)) / 30.;
+      float randz = rand(randCoord + vec2(.03, .04)) / 30.;
       vec3 yayRandom = vec3(randx,randy,randz);
 
       vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);

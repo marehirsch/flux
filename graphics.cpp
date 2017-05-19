@@ -197,9 +197,10 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     shader().uniform("animTime", animTime);
     shader().uniform("texSampler2", 0);
 
-    g.blending(false);
+    g.blending(true);
+    g.blendModeTrans();
 
-    g.pointSize(1);
+    g.pointSize(2);
     g.draw(dataMesh);
 
     glDisable(GL_TEXTURE_3D);

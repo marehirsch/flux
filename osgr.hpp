@@ -204,8 +204,7 @@ inline std::string OmniStereoGraphicsRenderer1::vertexCode() {
 uniform sampler3D texSampler2;
 
 uniform float animTime;
-varying vec4 flux_v_to_g;
-// varying vec4 my_color;
+varying float flux_v_to_g;
 varying float id_geo;
 float TEX_WIDTH = 178.0;
 
@@ -235,7 +234,7 @@ void main(){
   pos.y = earthRad * sin(xConv);
   pos.z = earthRad * cos(xConv) * sin(yConv);
 
-  flux_v_to_g = vec4(zConv, 0.2, 0.2, 1.0);
+  flux_v_to_g = zConv;
 
   // Built-in varying that we will use in the fragment shader
   gl_TexCoord[0] = gl_MultiTexCoord0;
@@ -249,10 +248,11 @@ void main(){
 inline std::string OmniStereoGraphicsRenderer1::fragmentCode() { return R"(
 #version 120
 
-varying vec4 flux_g_to_f;
+varying float flux_g_to_f;
 
 void main(){
-  gl_FragColor = flux_g_to_f;
+  // gl_FragColor = flux_g_to_f;
+  gl_FragColor = vec4(flux_g_to_f, 0.2, 0.2, 1.0);
 }
 )";
 }
@@ -317,8 +317,8 @@ vec4 omni_render(in vec4 vertex) {
 }
 
 uniform float animTime;
-varying in vec4 flux_v_to_g[];
-varying out vec4 flux_g_to_f;
+varying in float flux_v_to_g[];
+varying out float flux_g_to_f;
 
 varying in float id_geo[];
 
@@ -328,12 +328,14 @@ float rand(vec2 co){
 }
 
 void main(){
-  flux_g_to_f = flux_v_to_g[0];
+  
   
 
   for(int i = 0; i < gl_VerticesIn; ++i){
     //get flux value
-    float gflux = flux_v_to_g[i].x;
+    flux_g_to_f = smoothstep(0.0, 0.3, flux_v_to_g[i]);
+    // flux_g_to_f = flux_v_to_g[i] / 4.0;
+    float gflux = flux_v_to_g[i] + 1.0;
 
     for(int j=0; j<gflux*10; j++){
       //add displacement to each vertex (more vertices for higher gflux value)

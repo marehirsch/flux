@@ -252,8 +252,7 @@ inline std::string OmniStereoGraphicsRenderer1::fragmentCode() { return R"(
 varying float flux_g_to_f;
 
 void main(){
-  // gl_FragColor = flux_g_to_f;
-  gl_FragColor = vec4(flux_g_to_f, 0.05, 0.1, 0.6);
+  gl_FragColor = vec4(0.1 + flux_g_to_f, 0.2 * smoothstep(0.8, 1.0, flux_g_to_f), 0.1, 0.6);
 }
 )";
 }

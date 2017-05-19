@@ -188,7 +188,7 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
   }
 
   virtual void onDraw(Graphics& g) {
-    omni().clearColor() = Color(0.03, 0.05, 0.1);
+    omni().clearColor() = Color(0.06, 0.1, 0.15);
     // omni().clearColor() = Color(0.0f, omni().face() / 5.0f, (5.0f - omni().face()) / 5.0f);
 
     glActiveTexture(GL_TEXTURE0);

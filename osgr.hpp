@@ -100,7 +100,7 @@ inline void OmniStereoGraphicsRenderer1::start() {
 inline OmniStereoGraphicsRenderer1::~OmniStereoGraphicsRenderer1() {}
 
 inline OmniStereoGraphicsRenderer1::OmniStereoGraphicsRenderer1()
-    : mNavControl(mNav), mOSCSend(12001), mOmni(1024, true) {
+    : mNavControl(mNav), mOSCSend(12001), mOmni(512, true) {
 
   bOmniEnable = true;
   mHostName = Socket::hostName();
@@ -334,7 +334,7 @@ void main(){
 
   for(int i = 0; i < gl_VerticesIn; ++i){
     //get flux value
-    flux_g_to_f = smoothstep(0.0, 0.3, flux_v_to_g[i]);
+    flux_g_to_f = smoothstep(0.0, 0.2, flux_v_to_g[i]);
     // flux_g_to_f = flux_v_to_g[i] / 4.0;
     float gflux = flux_v_to_g[i] + 1.0;
 
@@ -342,10 +342,11 @@ void main(){
       //add displacement to each vertex (more vertices for higher gflux value)
 
       vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
-      float randx = rand(randCoord + vec2(.01, .02)) / 30.;
-      float randy = rand(randCoord + vec2(.02, .03)) / 30.;
-      float randz = rand(randCoord + vec2(.03, .04)) / 30.;
+      float randx = rand(randCoord + vec2(.01, .02));
+      float randy = rand(randCoord + vec2(.02, .03));
+      float randz = rand(randCoord + vec2(.03, .04));
       vec3 yayRandom = vec3(randx,randy,randz);
+      yayRandom = yayRandom / max(1.0, length(yayRandom)) / 40.0;
 
       vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
       gl_Position = omni_render(gl_ModelViewMatrix * posGeo);

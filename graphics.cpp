@@ -199,7 +199,7 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
 
     g.blending(false);
 
-    g.pointSize(4);
+    g.pointSize(3);
     g.draw(dataMesh);
 
     glDisable(GL_TEXTURE_3D);

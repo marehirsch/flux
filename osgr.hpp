@@ -100,7 +100,7 @@ inline void OmniStereoGraphicsRenderer1::start() {
 inline OmniStereoGraphicsRenderer1::~OmniStereoGraphicsRenderer1() {}
 
 inline OmniStereoGraphicsRenderer1::OmniStereoGraphicsRenderer1()
-    : mNavControl(mNav), mOSCSend(12001), mOmni(512, true) {
+    : mNavControl(mNav), mOSCSend(12001), mOmni(1024, true) {
 
   bOmniEnable = true;
   mHostName = Socket::hostName();
@@ -346,7 +346,7 @@ void main(){
       float randy = rand(randCoord + vec2(.02, .03));
       float randz = rand(randCoord + vec2(.03, .04));
       vec3 yayRandom = vec3(randx,randy,randz);
-      yayRandom = yayRandom / max(1.0, length(yayRandom)) / 40.0;
+      yayRandom = yayRandom / max(1.0, length(yayRandom)) / 30.0;
 
       vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
       gl_Position = omni_render(gl_ModelViewMatrix * posGeo);

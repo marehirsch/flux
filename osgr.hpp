@@ -118,7 +118,8 @@ inline OmniStereoGraphicsRenderer1::OmniStereoGraphicsRenderer1()
 inline void OmniStereoGraphicsRenderer1::initOmni(std::string path) {
   mOmni.configure(path, mHostName);
   if (mOmni.activeStereo()) {
-    mOmni.mode(OmniStereo::ACTIVE).stereo(true);
+    // mOmni.mode(OmniStereo::ACTIVE).stereo(true);
+    mOmni.mode(OmniStereo::ACTIVE).stereo(false);
   }
 }
 
@@ -337,7 +338,7 @@ void main(){
     // flux_g_to_f = flux_v_to_g[i] / 4.0;
     float gflux = flux_v_to_g[i] + 1.0;
 
-    for(int j=0; j<gflux*10; j++){
+    for(int j=0; j<gflux*30; j++){
       //add displacement to each vertex (more vertices for higher gflux value)
 
       vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);

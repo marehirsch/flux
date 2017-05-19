@@ -334,11 +334,11 @@ void main(){
 
   for(int i = 0; i < gl_VerticesIn; ++i){
     //get flux value
-    flux_g_to_f = smoothstep(0.0, 0.2, flux_v_to_g[i]);
+    flux_g_to_f = smoothstep(0.0, 0.15, flux_v_to_g[i]);
     // flux_g_to_f = flux_v_to_g[i] / 4.0;
     float gflux = flux_v_to_g[i] + 1.0;
 
-    for(int j=0; j<gflux*30; j++){
+    for(int j=0; j<gflux*40; j++){
       //add displacement to each vertex (more vertices for higher gflux value)
 
       vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);
@@ -346,7 +346,8 @@ void main(){
       float randy = rand(randCoord + vec2(.02, .03));
       float randz = rand(randCoord + vec2(.03, .04));
       vec3 yayRandom = vec3(randx,randy,randz);
-      yayRandom = yayRandom / max(1.0, length(yayRandom)) / 30.0;
+      yayRandom = yayRandom / max(1.0, length(yayRandom));
+      yayRandom = yayRandom / 30.0;
 
       vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
       gl_Position = omni_render(gl_ModelViewMatrix * posGeo);

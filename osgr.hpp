@@ -349,6 +349,7 @@ void main(){
       yayRandom = yayRandom / 20.0;
 
       vec4 posGeo = vec4(gl_PositionIn[0].xyz + yayRandom, 1.);
+      posGeo.z = posGeo.z - 0.2;
       gl_Position = omni_render(gl_ModelViewMatrix * posGeo);
       EmitVertex();
     }

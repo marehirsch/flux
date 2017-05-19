@@ -52,11 +52,13 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
 
   float animTime = 0.0;
   int frameNum = 0;
-	double time=0;
+	// double time=0;
   float geoCoords[TEX_SIZE];
 
   cuttlebone::Taker<State, CHUNKSIZE> taker;
   State* state;
+
+  float time;
 
   AlloApp() {
     state = new State;
@@ -182,7 +184,6 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     animTime = state->animTime;
     // nav(state->pose);
 
-
     if (! popCount) return;
   }
 
@@ -200,7 +201,7 @@ struct AlloApp : OmniStereoGraphicsRenderer1 {
     g.blending(true);
     g.blendModeTrans();
 
-    g.pointSize(2);
+    g.pointSize(3);
     g.draw(dataMesh);
 
     glDisable(GL_TEXTURE_3D);

@@ -18,7 +18,6 @@ struct State {
   int frame;
   Pose pose;
   float animTime;
-
 };
 
 

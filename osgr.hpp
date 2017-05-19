@@ -337,7 +337,7 @@ void main(){
     flux_g_to_f = smoothstep(0.0, 0.1, flux_v_to_g[i]);
     float gflux = flux_v_to_g[i] + 1.0;
 
-    for(int j=0; j<gflux*40; j++){
+    for(int j=0; j<gflux*50; j++){
       //add displacement to each vertex (more vertices for higher gflux value)
 
       vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);

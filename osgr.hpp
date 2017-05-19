@@ -253,7 +253,7 @@ varying float flux_g_to_f;
 
 void main(){
   // gl_FragColor = flux_g_to_f;
-  gl_FragColor = vec4(flux_g_to_f, 0.05, 0.1, 0.7);
+  gl_FragColor = vec4(flux_g_to_f, 0.05, 0.1, 0.6);
 }
 )";
 }
@@ -334,10 +334,10 @@ void main(){
 
   for(int i = 0; i < gl_VerticesIn; ++i){
     //get flux value
-    flux_g_to_f = smoothstep(0.0, 0.1, flux_v_to_g[i]);
+    flux_g_to_f = smoothstep(0.0, 0.3, flux_v_to_g[i]);
     float gflux = flux_v_to_g[i] + 1.0;
 
-    for(int j=0; j<gflux*50; j++){
+    for(int j=0; j<gflux*60; j++){
       //add displacement to each vertex (more vertices for higher gflux value)
 
       vec2 randCoord = vec2(id_geo[0]/31561.) + vec2(float(j)/20.);

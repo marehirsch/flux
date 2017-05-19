@@ -253,7 +253,7 @@ varying float flux_g_to_f;
 
 void main(){
   // gl_FragColor = flux_g_to_f;
-  gl_FragColor = vec4(flux_g_to_f, 0.2, 0.2, 1.0);
+  gl_FragColor = vec4(flux_g_to_f, 0.05, 0.1, 0.7);
 }
 )";
 }
